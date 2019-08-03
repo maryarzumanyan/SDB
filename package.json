@@ -1,0 +1,32 @@
+{
+    "name": "sumpterdesignbuild",
+    "version": "1.0.0",
+    "main": "server.js",
+    "scripts": {
+        "start:prod": "node server.js",
+        "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
+        "client": "cd client && npm run start",
+        "install": "cd client && npm install",
+        "build": "cd client && npm run build",
+        "heroku-postbuild": "npm run build",
+        "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev"
+    },
+    "devDependencies": {
+        "concurrently": "^4.1.0",
+        "nodemon": "^1.18.7"
+    },
+    "dependencies": {
+        "axios": "^0.19.0",
+        "body-parser": "^1.18.3",
+        "bootstrap": "^4.3.1",
+        "express": "^4.16.4",
+        "googleapis": "^39.2.0",
+        "react": "^16.8.5",
+        "react-dom": "^16.8.5",
+        "react-google-login": "^5.0.2",
+        "react-onclickoutside": "6.5.0",
+        "react-responsive-modal": "^3.6.0",
+        "react-router": "4.3.1",
+        "react-router-dom": "4.3.1"
+    }
+}
