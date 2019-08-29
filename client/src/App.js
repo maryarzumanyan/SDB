@@ -7,6 +7,8 @@ class App extends React.Component {
   };
   
   componentDidMount() {
+    this.calFoldersApi();
+    
     this.callImagesApi()
       .then(res => {
         this.setState({ images: res });
@@ -16,6 +18,14 @@ class App extends React.Component {
   
   callImagesApi = async () => {
     const response = await fetch('/api/images');
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    
+    return body;
+  };
+
+  calFoldersApi = async () => {
+    const response = await fetch('/api/folders');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     

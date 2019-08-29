@@ -11,6 +11,14 @@ app.use(express.static("client/build"));
 
 /////////////////////////////////////////!!!!!!!!!!!!!!!!!!!!///////////////////////////////
 
+var projsByCat = {};
+var imagesByStepInProj = {};
+
+var design = [];
+var visualize = [];
+var build = [];
+
+
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
@@ -63,31 +71,124 @@ function getAccessToken(oAuth2Client, callback) {
 }
 
 
-function listFiles(auth, callback) {
+function listFiles(root, auth, param1, param2, callback) {
   const drive = google.drive({version: 'v3', auth});
   drive.files.list({
  //q: "'1TQ1BqRRw5AT-SaqHAGsYvscgMX3jdALd' in parents",
-    q: "'1VyBNsI7shE1C1s_zrnl23ngP9EbZU4jy' in parents",
+    q: "'" + root + "' in parents and trashed != true",
     pageSize: 10,
     fields: 'nextPageToken, files(mimeType, id, name, parents, webContentLink)',
     // fields: 'nextPageToken, files(*)',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     const files = res.data.files;
-    callback(files);  
+    callback(param1, param2, files);  
   });
 }
 
+function listFolders(root, auth, param, callback) {
+    const drive = google.drive({version: 'v3', auth});
+    drive.files.list({
+    q: "mimeType contains 'application/vnd.google-apps.folder' and \'" + root + "\' in parents and trashed != true",
+  //  pageSize: 10,
+    fields: 'nextPageToken, files(id, name)',
+    //fields: 'nextPageToken, files(*)',
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error: ' + err);
+    const files = res.data.files;
+    callback(param, files);
+  });
+}
+
+function SetData() {
+  // Reset all containers
+  var projsByCat = {};
+  var imagesByStepInProj = {};
+  var design = [];
+  var visualize = [];
+  var build = [];
+  
+  fs.readFile('credentials.json', (err, content) => {
+    if (err) return console.log('Error loading client secret file:', err);
+      // Authorize a client with credentials, then call the Google Drive API.
+      authorize(JSON.parse(content), auth => listFolders("1VyBNsI7shE1C1s_zrnl23ngP9EbZU4jy", auth, undefined, (_unused, categories) => {
+        for(var cat of categories) {
+          ////////// get projects for a category ////////////
+          listFolders(cat.id, auth, cat, (cat, projects) => {
+            console.log(`Projects for category ${cat.name} : ${projects}`);
+            projsByCat[cat.name] = [];
+            for(var prj of projects) {
+              projsByCat[cat.name].push(prj.name);
+              imagesByStepInProj[prj.name] = [];
+              ////////  get steps in a project /////
+              listFolders(prj.id, auth, prj, (prj, steps) => {
+                console.log(`Steps for project ${prj.name} : ${steps}`);
+                for(var step of steps) {
+                  if(step.name === "Design") {
+                    design.push(prj.name);
+                  } else if(step.name === "Visualize") {
+                    visualize.push(prj.name);
+                  } else{
+                    build.push(prj.name);
+                  }
+
+                  ///// get images for each step in a project ////
+                  listFiles(step.id, auth, prj, step, (prj, step, images) => {
+                    var imagesByStep = {};
+                    imagesByStep[step.name] = [];
+                    if (!imagesByStepInProj[prj.name]) {
+                      imagesByStepInProj[prj.name] = []
+                    }
+
+                    imagesByStepInProj[prj.name].push(imagesByStep);
+
+                    for(var img of images) {
+                      imagesByStep[step.name].push(img.webContentLink);
+                    }
+
+                    console.log(`Projects By Category: ${projsByCat}`);
+                    console.log(`Images By Step: ${imagesByStepInProj}`);
+                  });
+                }
+              })   
+            }
+          });
+        }
+      }
+    ));
+  });
+}
+
+
+
+/////////////////////// get routes !!!!  //////////////////////////////////////////
 app.get('/api/images', (req, res) => {
 
   fs.readFile('credentials.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Drive API.
-    authorize(JSON.parse(content), auth => listFiles(
+    authorize(JSON.parse(content), auth => listFiles("1VyBNsI7shE1C1s_zrnl23ngP9EbZU4jy",
       auth,
-      (files) => { res.send(files.map(file => file.webContentLink)) }
+      undefined,
+      undefined,
+      (_unused1, _unused2, files) => { res.send(files.map(file => file.webContentLink)) }
     ));
   });
+});
+
+app.get('/api/folders', (req, res) => {
+
+  fs.readFile('credentials.json', (err, content) => {
+    if (err) return console.log('Error loading client secret file:', err);
+    // Authorize a client with credentials, then call the Google Drive API.
+    authorize(JSON.parse(content), auth => listFolders("1VyBNsI7shE1C1s_zrnl23ngP9EbZU4jy",
+      auth,
+      undefined,
+      (_unused, files) => { res.send(files.map(file => file.webContentLink)) }
+    ));
+  });
+
+SetData();
 });
 
 
