@@ -1,35 +1,77 @@
 import React from 'react';
-import OneDriveAuth from "onedrive-auth";
+import "./Home.css";
+import MenuBox from './components/MenuBox';
 
 class Home extends React.Component {
     constructor() {
         super()
-        this.state = {}
+        this.state = {
+            mouseOver: false,
+            categories: [],
+            steps: [],
+            design: [],
+            visualize: [],
+            build: []
+        }
     }
 
     componentDidMount() {
-        var onedrive = new OneDriveAuth({
-            clientId: 'abdb17c9-3332-44e1-a425-270eeb0f99da',
-            scopes: 'onedrive.readwrite offline_access',
-            redirectUri: 'https://localhost:3000/index.html'
-          });
-      
-          console.info("Entering Constructor", onedrive);
-      
-          // check for active token
-          onedrive.auth().then(token => {
-            // call OneDrive API endpoints with given token
-            console.info("Connected, token = ", token);
-          }).catch(err => {
-            // create auth button
-            console.error("Failed. Error = ", err);
-          });
-          
-          console.info("Leaving Constructor", onedrive);
+        fetch("/api/data")
+          .then(response => response.json())
+          .then(data => this.updateState(data));
+    }
+
+    updateState(data) {
+        this.setState({
+            categories: data["projsByCat"],
+            steps: data["imagesByStepInProj"],
+            design: data["design"],
+            visualize: data["visualize"],
+            build: data["build"]
+        });
+    }
+
+    handleCategoryChange(name) {
+        // alert("Category Change: " + name);
+    }
+    
+    handleAboutChange(name) {
+        // alert("About Change: " + name);
+    }
+
+    handleContactChange(name) {
+        // alert("Contact Change: " + name);
     }
 
     render() {
-        return (<h1>HELLO</h1>);
+        return [
+            <div key="abc123" className="container">
+            <div className="row">
+                <div id="prj" className="col-4">
+                    <MenuBox 
+                        title="Projects"
+                        subitems={Object.keys(this.state.categories)}
+                        callback={this.handleCategoryChange}
+                    />
+                </div>
+                <div className="col-4">
+                    <MenuBox 
+                        title="About"
+                   //     subitems={Object.keys(this.state.steps)}
+                        subitems={["Design", "Visualize", "Build"]}
+                        callback={this.handleAboutChange}
+                    />
+                </div>
+                <div className="col-4">
+                    <MenuBox 
+                        title="Contact"
+                        subitems={Object.keys(this.state.visualize)}
+                        callback={this.handleContactChange}
+                    />
+                </div>
+            </div>
+            </div>
+        ];
     }
 }
 

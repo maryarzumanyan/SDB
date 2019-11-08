@@ -74,7 +74,6 @@ function getAccessToken(oAuth2Client, callback) {
 function listFiles(root, auth, param1, param2, callback) {
   const drive = google.drive({version: 'v3', auth});
   drive.files.list({
- //q: "'1TQ1BqRRw5AT-SaqHAGsYvscgMX3jdALd' in parents",
     q: "'" + root + "' in parents and trashed != true",
     pageSize: 10,
     fields: 'nextPageToken, files(mimeType, id, name, parents, webContentLink)',
@@ -102,25 +101,25 @@ function listFolders(root, auth, param, callback) {
 
 function SetData() {
   // Reset all containers
-  var projsByCat = {};
-  var imagesByStepInProj = {};
-  var design = [];
-  var visualize = [];
-  var build = [];
+  projsByCat = {};
+  imagesByStepInProj = {};
+  design = [];
+  visualize = [];
+  build = [];
   
   fs.readFile('credentials.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
       // Authorize a client with credentials, then call the Google Drive API.
       authorize(JSON.parse(content), auth => listFolders("1VyBNsI7shE1C1s_zrnl23ngP9EbZU4jy", auth, undefined, (_unused, categories) => {
         for(var cat of categories) {
-          ////////// get projects for a category ////////////
+          ////////// get projects for a category                            projsByCat( [cat]-> prjs[] )        ////////////
           listFolders(cat.id, auth, cat, (cat, projects) => {
             console.log(`Projects for category ${cat.name} : ${projects}`);
             projsByCat[cat.name] = [];
             for(var prj of projects) {
               projsByCat[cat.name].push(prj.name);
               imagesByStepInProj[prj.name] = [];
-              ////////  get steps in a project /////
+              ////////  get steps in a project                              Design[]  Visualize[]   Build[]  /////
               listFolders(prj.id, auth, prj, (prj, steps) => {
                 console.log(`Steps for project ${prj.name} : ${steps}`);
                 for(var step of steps) {
@@ -131,8 +130,7 @@ function SetData() {
                   } else{
                     build.push(prj.name);
                   }
-
-                  ///// get images for each step in a project ////
+                  ///// get images for each step in a project               imagesByStepInProj ( [proj]-> [[step]-> images[]] )     ////  
                   listFiles(step.id, auth, prj, step, (prj, step, images) => {
                     var imagesByStep = {};
                     imagesByStep[step.name] = [];
@@ -146,7 +144,7 @@ function SetData() {
                       imagesByStep[step.name].push(img.webContentLink);
                     }
 
-                    console.log(`Projects By Category: ${projsByCat}`);
+                    console.log(`Projects By Category: ${JSON.stringify(projsByCat)}`);
                     console.log(`Images By Step: ${imagesByStepInProj}`);
                   });
                 }
@@ -162,6 +160,21 @@ function SetData() {
 
 
 /////////////////////// get routes !!!!  //////////////////////////////////////////
+app.get('/api/categories  ', (req, res) => {
+  res.json(projsByCat);
+});
+
+app.get('/api/data', (req, res) => {
+  res.json(
+    {
+      projsByCat: projsByCat,
+      imagesByStepInProj: imagesByStepInProj,
+      design: design,
+      visualize: visualize,
+      build: build
+    });
+});
+
 app.get('/api/images', (req, res) => {
 
   fs.readFile('credentials.json', (err, content) => {

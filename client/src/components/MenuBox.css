@@ -1,0 +1,41 @@
+  .box {
+    margin: 5px;  
+    background-image: url(http://jasdesignbuild.com/wp-content/uploads/2019/05/home_projects_bg.jpg);
+    height: 150px;
+    text-align: center;
+    vertical-align: middle;
+
+  }
+  .box-over{
+    background-color: rgb(202, 151, 39);
+    text-align: center;
+    vertical-align: middle;
+
+  }
+  .list-group-hide{
+    visibility: hidden;
+  }
+  .list-group{
+    visibility: visible;
+  }
+
+  .list-group-item {
+    background-color: transparent;
+    border-top: 2px solid rgba(233, 135, 44, 0.822);
+    border-radius: 0;
+    color: rgb(68, 26, 26);
+    font-size: x-large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 1000;
+    }
+
+    .list-group-item:hover {
+        background-image: url(http://jasdesignbuild.com/wp-content/uploads/2019/05/home_projects_bg.jpg);
+       
+      }
+
+    h1{
+      color: rgb(68, 26, 26);
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 1000;
+    }

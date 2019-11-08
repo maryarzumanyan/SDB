@@ -1,0 +1,7 @@
+.bg-light {
+    color: black !important;
+  }
+  body{
+      background-image: url(images/background.jpg);
+      background-size: 100%;
+  }

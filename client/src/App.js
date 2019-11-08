@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import Home from './Home';
 
 class App extends React.Component {
   state = {
@@ -33,13 +34,16 @@ class App extends React.Component {
   };
   
   render() {
-    return (
+    return [
+      <Home />,
+      /*
       <div className="App">
         {this.state.images.map((image, index) => {
           return <img key={index} src={image} width="20%" alt="Unavailable"></img>
         })}
       </div>
-    );
+      */
+    ];
   }
 }
 
