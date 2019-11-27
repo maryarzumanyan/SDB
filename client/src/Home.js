@@ -1,6 +1,7 @@
 import React from 'react';
 import "./Home.css";
 import MenuBox from './components/MenuBox';
+import ProjectCard from './components/ProjectCard';
 
 class Home extends React.Component {
     constructor() {
@@ -11,7 +12,10 @@ class Home extends React.Component {
             steps: [],
             design: [],
             visualize: [],
-            build: []
+            build: [], 
+            categorie: "",
+            step: "",
+            contact: ""
         }
     }
 
@@ -31,46 +35,67 @@ class Home extends React.Component {
         });
     }
 
-    handleCategoryChange(name) {
-        // alert("Category Change: " + name);
+    handleCategoryChange = (name) => {
+        this.setState({categorie: name});
     }
     
-    handleAboutChange(name) {
+    handleAboutChange = (name) => {
         // alert("About Change: " + name);
     }
 
-    handleContactChange(name) {
+    handleContactChange = (name) => {
         // alert("Contact Change: " + name);
     }
 
     render() {
+        const items = [];
+
+        if(this.state.categorie !== "")
+        {
+            items.push(<h2>{this.state.categorie} Projects</h2>)
+            for (const value of this.state.categories[this.state.categorie]) {
+                items.push(<ProjectCard key = {value}
+                    title = {value}
+                    imageUrl = "images/project.jpg"
+                    />
+                )
+            }
+        }
         return [
-            <div key="abc123" className="container">
-            <div className="row">
-                <div id="prj" className="col-4">
-                    <MenuBox 
-                        title="Projects"
-                        subitems={Object.keys(this.state.categories)}
-                        callback={this.handleCategoryChange}
-                    />
+            <div className="container">
+                <div className="row" key="r1">
+                    <div id="prj" className="col-4">
+                        <MenuBox 
+                            title="Projects"
+                            subitems={Object.keys(this.state.categories)}
+                            callback={this.handleCategoryChange}
+                        />
+                    </div>
+                    <div className="col-4">
+                        <MenuBox 
+                            title="About"
+                    //     subitems={Object.keys(this.state.steps)}
+                            subitems={["Design", "Visualize", "Build"]}
+                            callback={this.handleAboutChange}
+                        />
+                    </div>
+                    <div className="col-4">
+                        <MenuBox 
+                            title="Contact"
+                            //subitems={Object.keys(this.state.visualize)}
+                            subitems={["Info", "Contact me"]}
+                            callback={this.handleContactChange}
+                        />
+                    </div>
+                </div>    
+                <div className="row" key="r2" id="content">
+                    <div className="col-12" >
+                        <div id= "wrapper">
+                            {items}
+                        </div>
+                    </div>
                 </div>
-                <div className="col-4">
-                    <MenuBox 
-                        title="About"
-                   //     subitems={Object.keys(this.state.steps)}
-                        subitems={["Design", "Visualize", "Build"]}
-                        callback={this.handleAboutChange}
-                    />
-                </div>
-                <div className="col-4">
-                    <MenuBox 
-                        title="Contact"
-                        subitems={Object.keys(this.state.visualize)}
-                        callback={this.handleContactChange}
-                    />
-                </div>
-            </div>
-            </div>
+                </div> 
         ];
     }
 }

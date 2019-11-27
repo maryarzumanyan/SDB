@@ -1,0 +1,11 @@
+.card{
+    width: 12rem;
+    float: right;
+    margin: 8px;
+    border-width: thick;
+    border-color:rgb(67, 93, 114);
+    background-color: transparent;
+    font-weight: bold;
+    background-image: url(http://jasdesignbuild.com/wp-content/uploads/2019/05/home_projects_bg.jpg);
+
+}

@@ -7,7 +7,7 @@ var port = process.env.PORT || 5000;
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static("client/build"));
+app.use(express.static("client/content"));
 
 /////////////////////////////////////////!!!!!!!!!!!!!!!!!!!!///////////////////////////////
 

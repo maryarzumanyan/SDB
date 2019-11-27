@@ -25,7 +25,8 @@ class MenuBox extends React.Component {
     }
 
     renderCategories(name) {
-        return <div role="button" className="list-group-item list-group-item-action" onClick={this.props.callback(name)}>{name}</div>;
+        return <div role="button" className="list-group-item list-group-item-action"
+        onClick={() => this.props.callback(name)}>{name}</div>;
     }
 
     render() {
