@@ -40,7 +40,7 @@ class MenuBox extends React.Component {
             <div id="home_projects" className={this.state.mouseOver ? "box-over" : "box"}
             onMouseOut={()=> this.handleMouseOut()}
             onMouseOver={()=> this.handleMouseOver()}>
-                <h1>{this.props.title}</h1>
+                <h2>{this.props.title}</h2>
                 <div className={this.state.mouseOver ? "list-group" : "list-group-hide"}>
                     {categoryElements}
                 </div>

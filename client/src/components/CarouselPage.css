@@ -1,0 +1,36 @@
+MDBCarousel {
+    height: 500px;
+    margin-bottom: 60px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Declare heights because of positioning of img element */
+MDBView{
+    text-align: center;
+}
+
+
+.d-block{
+    max-height: 600px;
+    max-width: 850px;
+    width: auto;
+    height: auto;
+    text-align: center;
+}
+
+.carousel-caption {
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+@media (min-width: 500px) {
+    MDBCarouselCaption {
+        margin-bottom: 20px;
+        font-size: 21px;
+        line-height: 1.4;
+        text-align: center;
+    }
+}
+

@@ -1,6 +1,6 @@
   .box {
     margin: 5px;  
-    background-image: url(http://jasdesignbuild.com/wp-content/uploads/2019/05/home_projects_bg.jpg);
+    background-image: url(../images/menu.jpg);
     height: 150px;
     text-align: center;
     vertical-align: middle;
@@ -33,11 +33,11 @@
     }
 
     .list-group-item:hover {
-        background-image: url(http://jasdesignbuild.com/wp-content/uploads/2019/05/home_projects_bg.jpg);
+        background-image: url(../images/menu.jpg);
          
       }
 
-    h1{
+    h2{
       color: rgb(68, 26, 26);
       font-family: 'Times New Roman', Times, serif;
       font-weight: 1000;

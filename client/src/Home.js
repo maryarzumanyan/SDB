@@ -2,6 +2,7 @@ import React from 'react';
 import "./Home.css";
 import MenuBox from './components/MenuBox';
 import ProjectCard from './components/ProjectCard';
+import CarouselPage from './components/CarouselPage';
 
 class Home extends React.Component {
     constructor() {
@@ -15,7 +16,8 @@ class Home extends React.Component {
             build: [], 
             categorie: "",
             step: "",
-            contact: ""
+            contact: "",
+            project: ""
         }
     }
 
@@ -37,6 +39,7 @@ class Home extends React.Component {
 
     handleCategoryChange = (name) => {
         this.setState({categorie: name});
+        this.setState({project: ""});
     }
     
     handleAboutChange = (name) => {
@@ -47,22 +50,52 @@ class Home extends React.Component {
         // alert("Contact Change: " + name);
     }
 
+    handleProjectSelected = (name) => {
+        this.setState({project: name});
+    }
+
     render() {
         const items = [];
 
         if(this.state.categorie !== "")
         {
-            items.push(<h2>{this.state.categorie} Projects</h2>)
-            for (const value of this.state.categories[this.state.categorie]) {
-                items.push(<ProjectCard key = {value}
+            if(this.state.project === "")
+            {
+                items.push(<h1>{this.state.categorie} Projects</h1>)
+                for (const value of this.state.categories[this.state.categorie]) {
+                    items.push(<ProjectCard key = {value}
                     title = {value}
                     imageUrl = "images/project.jpg"
-                    />
-                )
+                    callback = {this.handleProjectSelected}
+                    />)
+                }
             }
+            else{
+                items.push(<h1>{this.state.project}</h1>)
+                var imageTitlePairs = [];
+                for (const step of this.state.steps[this.state.project] ){                   
+                    for (const name of Object.keys(step))
+                    {
+                        for(const url of step[name]){
+
+                            imageTitlePairs.push({name, url});
+                            
+                            /*
+                            items.push(<ProjectCard key = {url}
+                                title = {name}
+                                imageUrl = {url}
+                                callback = {null}
+                                />)   
+                            */     
+                        }
+                    }
+                }
+                items.push(<CarouselPage imageTitlePairs={imageTitlePairs} />);
+            }   
         }
         return [
             <div className="container">
+                
                 <div className="row" key="r1">
                     <div id="prj" className="col-4">
                         <MenuBox 

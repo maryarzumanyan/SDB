@@ -2,10 +2,22 @@
     width: 12rem;
     float: right;
     margin: 8px;
-    border-width: thick;
-    border-color:rgb(67, 93, 114);
+    border-width: thick;  
     background-color: transparent;
     font-weight: bold;
-    background-image: url(http://jasdesignbuild.com/wp-content/uploads/2019/05/home_projects_bg.jpg);
-
+    background-image: url(../images/menu.jpg);
+    border: 5px solid;
+    
+}
+.card .card-body .card-text{
+    color: rgb(68, 26, 26);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: medium;
+    font-weight: 1000;
+}
+#c-over{
+    border-color:rgb(220, 229, 236);
+}
+#c{
+    border-color:rgb(67, 93, 114);
 }

@@ -9,16 +9,29 @@ class ProjectCard extends React.Component{
         /*
             title: "",
             imageUrl: ""
+            callback: null
         */
 
        this.state = {
             mouseOver: false
         }
     }
+
+    handleMouseOver = () =>{
+        this.setState({ mouseOver: true });
+    }
+
+    handleMouseOut = () =>{
+        this.setState({ mouseOver: false });
+    }
+
     render(){
 
         return[
-            <div className="card">
+            <div role="button" className="card" id={this.state.mouseOver ? "c-over" : "c"}
+            onMouseOut={()=> this.handleMouseOut()}
+            onMouseOver={()=> this.handleMouseOver()}
+            onClick={() => this.props.callback(this.props.title)}>
                 <img src={this.props.imageUrl} class="card-img-top" alt="..."/>
                 <div className="card-body">
                 <p className="card-text">{this.props.title}</p>

@@ -29,7 +29,6 @@ class App extends React.Component {
     const response = await fetch('/api/folders');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
-    
     return body;
   };
   
@@ -41,7 +40,7 @@ class App extends React.Component {
         {this.state.images.map((image, index) => {
           return <img key={index} src={image} width="20%" alt="Unavailable"></img>
         })}
-      </div>
+       </div>
       */
     ];
   }
